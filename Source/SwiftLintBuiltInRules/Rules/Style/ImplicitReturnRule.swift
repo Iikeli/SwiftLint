@@ -61,6 +61,15 @@ private extension ImplicitReturnRule {
             }
         }
 
+        override func visitPost(_ node: SwitchCaseSyntax) {
+            if configuration.isKindIncluded(.switch) {
+                let item = node.statements.trimmedDescription
+                if item != "return" && item != "return nil" {
+                    collectViolation(in: node.statements)
+                }
+            }
+        }
+
         private func collectViolation(in itemList: CodeBlockItemListSyntax) {
             guard let returnStmt = itemList.onlyElement?.item.as(ReturnStmtSyntax.self) else {
                 return
