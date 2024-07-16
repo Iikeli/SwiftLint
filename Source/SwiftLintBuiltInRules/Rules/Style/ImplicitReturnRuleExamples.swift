@@ -338,7 +338,7 @@ struct ImplicitReturnRuleExamples {
             Example("""
                 switch someBool {
                 case true: true
-                case false: return nil
+                case false: nil
                 }
                 """),
             Example("""
@@ -346,7 +346,24 @@ struct ImplicitReturnRuleExamples {
                 case true:
                     true
                 case false:
-                    return
+                    nil
+                }
+                """),
+            Example("""
+                return switch someBool {
+                case true:
+                    true
+                case false:
+                    nil
+                }
+                """),
+            Example("""
+                switch someBool {
+                case true:
+                    return true
+                case false:
+                    let someVar = 0
+                    return nil
                 }
                 """),
         ]
@@ -355,7 +372,7 @@ struct ImplicitReturnRuleExamples {
             Example("""
                 switch someBool {
                 case true: ↓return true
-                case false: return nil
+                case false: ↓return nil
                 }
                 """),
             Example("""
@@ -363,7 +380,7 @@ struct ImplicitReturnRuleExamples {
                 case true:
                     ↓return true
                 case false:
-                    return
+                    ↓return nil
                 }
                 """),
         ]
@@ -372,12 +389,12 @@ struct ImplicitReturnRuleExamples {
             Example("""
                 switch someBool {
                 case true: ↓return true
-                case false: return nil
+                case false: ↓return nil
                 }
                 """): Example("""
                 switch someBool {
                 case true: true
-                case false: return nil
+                case false: nil
                 }
                 """),
             Example("""
@@ -385,14 +402,14 @@ struct ImplicitReturnRuleExamples {
                 case true:
                     ↓return true
                 case false:
-                    return
+                    ↓return nil
                 }
                 """): Example("""
                 switch someBool {
                 case true:
                     true
                 case false:
-                    return
+                    nil
                 }
                 """),
         ]

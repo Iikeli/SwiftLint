@@ -61,11 +61,32 @@ private extension ImplicitReturnRule {
             }
         }
 
-        override func visitPost(_ node: SwitchCaseSyntax) {
+        override func visitPost(_ node: SwitchExprSyntax) {
             if configuration.isKindIncluded(.switch) {
-                let item = node.statements.trimmedDescription
-                if item != "return" && item != "return nil" {
-                    collectViolation(in: node.statements)
+                dump(file.syntaxTree)
+                var violations: [CodeBlockItemListSyntax] = []
+                let switchCases: SwitchCaseListSyntax = node.cases
+                for switchCase in switchCases {
+                    dump("🏴‍☠️ \(switchCase)")
+                    var childViolations: [CodeBlockItemListSyntax] = []
+                    if let item = switchCase.as(SwitchCaseSyntax.self) {
+                        if item.statements.count > 1 {
+                            return
+                        } else {
+                            childViolations.append(item.statements)
+                        }
+                    }
+                    for violation in childViolations {
+                        violations.append(violation)
+                    }
+                }
+//                if node.statements.syntaxNodeType != NilLiteralExprSyntax.self {
+//                    if item != "return" && item != "return nil" {
+//                        collectViolation(in: node.statements)
+//                    }
+//                }
+                for violation in violations {
+                    collectViolation(in: violation)
                 }
             }
         }
